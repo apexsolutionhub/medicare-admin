@@ -93,7 +93,7 @@ export async function createTenant(payload: CreateTenantPayload) {
 
 export async function updateTenant(
   tin: string,
-  payload: Record<string, string | number | boolean | string[] | undefined>,
+  payload: Record<string, string | number | boolean | string[] | null | undefined>,
 ) {
   const { data } = await api.patch<Tenant>(
     `/tenants/${encodeURIComponent(tin)}/`,
