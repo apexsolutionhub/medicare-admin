@@ -16,7 +16,7 @@ import type {
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
-  "http://127.0.0.1:8000/api";
+  "https://medicare-admin-backend.vercel.app/api";
 
 const TOKEN_KEY = "apex_token";
 const USER_KEY = "apex_user";
