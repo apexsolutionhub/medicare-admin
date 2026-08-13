@@ -14,9 +14,10 @@ import type {
   TenantUserRow,
 } from "./types";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
-  "https://medicare-admin-backend.vercel.app/api";
+const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL?.split(",")[0]?.trim().replace(/\/$/, "") ||
+  "https://medicare-admin-backend.vercel.app/api"
+);
 
 const TOKEN_KEY = "apex_token";
 const USER_KEY = "apex_user";
