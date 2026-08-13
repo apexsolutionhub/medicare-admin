@@ -6,7 +6,7 @@ import { ConsoleShell } from "@/components/ConsoleShell";
 import { ApexAuditLogTable } from "@/components/apex/audit/ApexAuditLogTable";
 import { ApexErrorAlert, ApexPageHeader, Panel } from "@/components/apex/PageChrome";
 import { Spinner } from "@/components/ui/spinner";
-import { getErrorMessage, listAuditLogs } from "@/lib/api";
+import { getErrorMessage, isUnauthenticatedError, listAuditLogs } from "@/lib/api";
 import type { AuditLogRow } from "@/lib/types";
 
 export default function AuditPage() {
@@ -23,6 +23,7 @@ export default function AuditPage() {
         const list = await listAuditLogs();
         if (!cancelled) setRows(list);
       } catch (err) {
+        if (isUnauthenticatedError(err)) return;
         const msg = getErrorMessage(err);
         if (!cancelled) {
           setError(msg);

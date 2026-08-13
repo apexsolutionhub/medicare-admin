@@ -11,7 +11,7 @@ import { ApexStartChatDialog } from "@/components/apex/feedback/ApexStartChatDia
 import { ApexPageHeader, Panel } from "@/components/apex/PageChrome";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-import { getErrorMessage, listFeedbackDirectory } from "@/lib/api";
+import { getErrorMessage, isUnauthenticatedError, listFeedbackDirectory } from "@/lib/api";
 import type { FeedbackDirectoryRow } from "@/lib/types";
 
 function FeedbackDirectory() {
@@ -27,7 +27,9 @@ function FeedbackDirectory() {
       const list = await listFeedbackDirectory();
       setAllRows(list);
     } catch (err) {
-      toast.error(getErrorMessage(err) || "Failed to load pharmacies");
+      if (!isUnauthenticatedError(err)) {
+        toast.error(getErrorMessage(err) || "Failed to load pharmacies");
+      }
     } finally {
       setLoading(false);
     }

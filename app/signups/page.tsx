@@ -8,7 +8,7 @@ import { ApexCreateTenantDialog } from "@/components/apex/onboarding/ApexCreateT
 import { ApexSignupsTable } from "@/components/apex/signups/ApexSignupsTable";
 import { ApexPageHeader, Panel } from "@/components/apex/PageChrome";
 import { Spinner } from "@/components/ui/spinner";
-import { getErrorMessage, listSignups } from "@/lib/api";
+import { getErrorMessage, isUnauthenticatedError, listSignups } from "@/lib/api";
 import type { SignupRow } from "@/lib/types";
 
 const WHATSAPP = ["+251935000642", "+251930272975"];
@@ -22,7 +22,9 @@ export default function SignupsPage() {
     try {
       setRows(await listSignups());
     } catch (err) {
-      toast.error(getErrorMessage(err) || "Failed to load signups");
+      if (!isUnauthenticatedError(err)) {
+        toast.error(getErrorMessage(err) || "Failed to load signups");
+      }
     } finally {
       setLoading(false);
     }

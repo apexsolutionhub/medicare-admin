@@ -58,6 +58,28 @@ export function clearSession() {
   localStorage.removeItem(USER_KEY);
 }
 
+export function isUnauthenticatedError(error: unknown): boolean {
+  return axios.isAxiosError(error) && error.response?.status === 401;
+}
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (typeof window !== "undefined" && axios.isAxiosError(error)) {
+      const status = error.response?.status;
+      const url = String(error.config?.url || "");
+      const isLoginRequest = url.includes("/apex/auth/login/");
+      if (status === 401 && !isLoginRequest) {
+        clearSession();
+        if (!window.location.pathname.startsWith("/login")) {
+          window.location.replace("/login");
+        }
+      }
+    }
+    return Promise.reject(error);
+  },
+);
+
 export function persistSession(access: string, user: ApexUser) {
   localStorage.setItem(TOKEN_KEY, access);
   localStorage.setItem(USER_KEY, JSON.stringify(user));

@@ -12,7 +12,7 @@ import { ApexCreateTenantDialog } from "@/components/apex/onboarding/ApexCreateT
 import { ApexEmptyState, ApexPageHeader, Panel } from "@/components/apex/PageChrome";
 import { AccountStatusBadge, SubscriptionStatusBadge } from "@/components/apex/StatusBadge";
 import { TENANT_STATUSES } from "@/constants/branding";
-import { getErrorMessage, listTenants } from "@/lib/api";
+import { getErrorMessage, isUnauthenticatedError, listTenants } from "@/lib/api";
 import { deriveSubscriptionStatus } from "@/lib/analytics";
 import type { Tenant } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
@@ -75,7 +75,7 @@ function TenantsContent() {
         setTenants(data);
       }
     } catch (err) {
-      toast.error(getErrorMessage(err));
+      if (!isUnauthenticatedError(err)) toast.error(getErrorMessage(err));
     } finally {
       setLoading(false);
     }

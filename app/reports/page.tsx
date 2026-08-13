@@ -22,6 +22,7 @@ import { ApexSubscriptionBreakdown } from "@/components/apex/reports/ApexSubscri
 import {
   getDashboardSummary,
   getErrorMessage,
+  isUnauthenticatedError,
   listAuditLogs,
   listFeedbackDirectory,
   listTenants,
@@ -71,6 +72,7 @@ export default function ReportsPage() {
       );
       setFeedbackStats(aggregateFeedbackActivity(feedback));
     } catch (err) {
+      if (isUnauthenticatedError(err)) return;
       const msg = getErrorMessage(err);
       setError(msg);
       toast.error(msg);

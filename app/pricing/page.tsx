@@ -6,7 +6,7 @@ import { ConsoleShell } from "@/components/ConsoleShell";
 import { ApexPageHeader } from "@/components/apex/PageChrome";
 import { ApexPricingRulesTable } from "@/components/apex/pricing/ApexPricingRulesTable";
 import { Spinner } from "@/components/ui/spinner";
-import { getErrorMessage, listPricingRules } from "@/lib/api";
+import { getErrorMessage, isUnauthenticatedError, listPricingRules } from "@/lib/api";
 import type { PricingRule } from "@/lib/types";
 
 export default function PricingPage() {
@@ -18,6 +18,7 @@ export default function PricingPage() {
     try {
       setRules(await listPricingRules());
     } catch (err) {
+      if (isUnauthenticatedError(err)) return;
       const msg = getErrorMessage(err);
       setLoadError(msg);
       setRules([]);

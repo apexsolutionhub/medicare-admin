@@ -17,7 +17,14 @@ import { ApexSmartInsights } from "@/components/apex/overview/ApexSmartInsights"
 import { ApexStatGrid } from "@/components/apex/overview/ApexStatGrid";
 import { ApexBarBreakdown } from "@/components/apex/overview/ApexBarBreakdown";
 import { ApexDonutChart } from "@/components/apex/charts/ApexDonutChart";
-import { getDashboardSummary, getErrorMessage, getStoredUser, listTenants } from "@/lib/api";
+import {
+  getDashboardSummary,
+  getErrorMessage,
+  getStoredToken,
+  getStoredUser,
+  isUnauthenticatedError,
+  listTenants,
+} from "@/lib/api";
 import {
   computeTenantPortfolioMetrics,
   portfolioHealthScore,
@@ -84,12 +91,17 @@ export default function DashboardPage() {
   const firstName = (user?.full_name || user?.username || "Apex").split(/\s+/)[0];
 
   useEffect(() => {
+    if (!getStoredToken()) {
+      setLoading(false);
+      return;
+    }
     void Promise.all([getDashboardSummary(), listTenants()])
       .then(([s, t]) => {
         setSummary(s);
         setTenants(t);
       })
       .catch((err) => {
+        if (isUnauthenticatedError(err)) return;
         const msg = getErrorMessage(err);
         setError(msg);
         toast.error(msg);

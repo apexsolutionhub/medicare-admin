@@ -15,6 +15,7 @@ import {
   closeFeedbackThread,
   getErrorMessage,
   getFeedbackThread,
+  isUnauthenticatedError,
   sendFeedbackMessage,
 } from "@/lib/api";
 import type { FeedbackMessage } from "@/lib/types";
@@ -53,7 +54,7 @@ export default function FeedbackThreadPage() {
       setStatus(data.thread.status);
       setMessages(data.messages);
     } catch (err) {
-      toast.error(getErrorMessage(err));
+      if (!isUnauthenticatedError(err)) toast.error(getErrorMessage(err));
     } finally {
       setLoading(false);
     }

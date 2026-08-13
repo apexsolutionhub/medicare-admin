@@ -15,7 +15,7 @@ import {
 } from "@/components/apex/tenant/ApexTenantUsersDetailTrigger";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
-import { getErrorMessage, listTenants, listTenantUsers } from "@/lib/api";
+import { getErrorMessage, isUnauthenticatedError, listTenants, listTenantUsers } from "@/lib/api";
 import { deriveSubscriptionStatus } from "@/lib/analytics";
 import type { Tenant, TenantUserRow } from "@/lib/types";
 
@@ -101,7 +101,7 @@ export default function UsersPage() {
         );
         setGroups(groupUsersByTenant(users, tenantsByTin));
       } catch (err) {
-        toast.error(getErrorMessage(err));
+        if (!isUnauthenticatedError(err)) toast.error(getErrorMessage(err));
       } finally {
         setLoading(false);
       }

@@ -15,6 +15,7 @@ import {
   approveQuarterlyPayment,
   approveSetupPayment,
   getErrorMessage,
+  isUnauthenticatedError,
   listPendingPayments,
   rejectPayment,
 } from "@/lib/api";
@@ -55,7 +56,7 @@ export function PaymentsQueue({ kind }: { kind: PaymentKind }) {
     try {
       setRows(await listPendingPayments(kind));
     } catch (err) {
-      toast.error(getErrorMessage(err));
+      if (!isUnauthenticatedError(err)) toast.error(getErrorMessage(err));
       setRows([]);
     } finally {
       setLoading(false);

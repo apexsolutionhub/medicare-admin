@@ -24,6 +24,7 @@ import {
   changeTenantStatus,
   getErrorMessage,
   getTenant,
+  isUnauthenticatedError,
   rejectPayment,
   releaseBillingHold,
   setUserLoginDisabled,
@@ -51,7 +52,9 @@ export default function TenantDetailPage() {
 
   useEffect(() => {
     void reload()
-      .catch((err) => toast.error(getErrorMessage(err)))
+      .catch((err) => {
+        if (!isUnauthenticatedError(err)) toast.error(getErrorMessage(err));
+      })
       .finally(() => setInitialLoad(false));
   }, [reload]);
 
