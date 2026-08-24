@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { ApexTenantTabShell } from "@/components/apex/tenant/ApexTenantTabShell";
 import { AccountStatusBadge } from "@/components/apex/StatusBadge";
 import type { Tenant } from "@/lib/types";
