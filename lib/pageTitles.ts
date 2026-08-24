@@ -11,6 +11,7 @@ export function apexPageTitle(pathname: string, searchParams?: URLSearchParams):
     "/tenants": "All tenants",
     "/users": "Tenant users",
     "/pricing": "Pricing catalog",
+    "/sales-agents": "Sales Agents",
     "/audit": "Audit log",
     "/payments/setup": "Setup payments",
     "/payments/quarterly": "Quarterly payments",

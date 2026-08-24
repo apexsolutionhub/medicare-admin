@@ -12,7 +12,7 @@ import {
   Tags,
   UserPlus,
   Users,
-  BarChart3,
+  Handshake,
 } from "lucide-react";
 import {
   CommandDialog,
@@ -29,6 +29,7 @@ const LINKS = [
   { href: "/tenants", label: "All tenants", icon: Building2 },
   { href: "/users", label: "Tenant users", icon: Users },
   { href: "/pricing", label: "Pricing catalog", icon: Tags },
+  { href: "/sales-agents", label: "Sales Agents", icon: Handshake },
   { href: "/audit", label: "Audit log", icon: FileText },
   { href: "/payments/setup", label: "Setup payments", icon: ClipboardList },
   { href: "/payments/quarterly", label: "Quarterly payments", icon: CreditCard },

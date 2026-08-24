@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +18,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
-import { createTenant, getErrorMessage } from "@/lib/api";
+import { createTenant, fetchApexSalesAgents, getErrorMessage, type SalesAgentRow } from "@/lib/api";
+import { SalesAgentSelector } from "@/components/signup/SalesAgentSelector";
+import { Label } from "@/components/ui/label";
 
 const createSchema = z.object({
   pharmacy_tin: z.string().min(1, "TIN is required"),
@@ -27,6 +29,7 @@ const createSchema = z.object({
   manager_username: z.string().min(1, "Manager username is required"),
   manager_password: z.string().min(6, "Password must be at least 6 characters"),
   waive_setup_fee: z.boolean().optional(),
+  sales_agent_id: z.number().int().positive().nullable().optional(),
 });
 
 type CreateValues = z.infer<typeof createSchema>;
@@ -47,6 +50,8 @@ export function ApexCreateTenantDialog({
   children,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const [agents, setAgents] = useState<SalesAgentRow[]>([]);
+  const [agentsLoading, setAgentsLoading] = useState(false);
   const form = useForm<CreateValues>({
     resolver: zodResolver(createSchema),
     defaultValues: {
@@ -56,8 +61,28 @@ export function ApexCreateTenantDialog({
       manager_username: "",
       manager_password: "",
       waive_setup_fee: false,
+      sales_agent_id: null,
     },
   });
+
+  useEffect(() => {
+    if (!open) return;
+    let active = true;
+    setAgentsLoading(true);
+    void fetchApexSalesAgents(true)
+      .then((rows) => {
+        if (active) setAgents(rows);
+      })
+      .catch(() => {
+        if (active) setAgents([]);
+      })
+      .finally(() => {
+        if (active) setAgentsLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [open]);
 
   async function onCreate(values: CreateValues) {
     try {
@@ -68,6 +93,7 @@ export function ApexCreateTenantDialog({
         manager_username: values.manager_username.trim(),
         manager_password: values.manager_password,
         waive_setup_fee: Boolean(values.waive_setup_fee),
+        sales_agent_id: values.sales_agent_id ?? null,
       });
       toast.success("Tenant created");
       form.reset();
@@ -142,6 +168,15 @@ export function ApexCreateTenantDialog({
               description="Approve setup immediately (skip payment portal)."
               className="sm:col-span-2"
             />
+            <div className="space-y-2 sm:col-span-2">
+              <Label>Sales agent (optional)</Label>
+              <SalesAgentSelector
+                value={form.watch("sales_agent_id") ?? null}
+                onChange={(next) => form.setValue("sales_agent_id", next)}
+                agents={agents}
+                loading={agentsLoading}
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>

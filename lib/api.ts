@@ -272,6 +272,46 @@ export async function getAnalyticsSummary() {
   return data;
 }
 
+export type SalesAgentRow = {
+  id: number;
+  displayName: string;
+  phone: string | null;
+  email: string | null;
+  city: string | null;
+  notes: string | null;
+  isActive: boolean;
+  createdAt?: string;
+  tenantCount: number;
+};
+
+export async function fetchApexSalesAgents(activeOnly = false) {
+  const { data } = await api.get<SalesAgentRow[]>("/tenants/sales-agents/", {
+    params: activeOnly ? { active_only: true } : undefined,
+  });
+  return data;
+}
+
+export async function upsertSalesAgent(input: {
+  id?: number;
+  displayName: string;
+  phone?: string | null;
+  email?: string | null;
+  city?: string | null;
+  notes?: string | null;
+  isActive?: boolean;
+}) {
+  const { data } = await api.post<SalesAgentRow>("/tenants/sales-agents/", input);
+  return data;
+}
+
+export async function setSalesAgentActive(id: number, isActive: boolean) {
+  await api.patch(`/tenants/sales-agents/${id}/`, { isActive });
+}
+
+export async function deleteSalesAgent(id: number) {
+  await api.delete(`/tenants/sales-agents/${id}/`);
+}
+
 export function getErrorMessage(error: unknown): string {
   const axiosError = error as AxiosError<{ detail?: string; [key: string]: unknown }>;
   const data = axiosError.response?.data;

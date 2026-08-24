@@ -79,6 +79,7 @@ export type CreateTenantPayload = {
   yearly_fee_etb?: number;
   modules?: string[];
   waive_setup_fee?: boolean;
+  sales_agent_id?: number | null;
 };
 
 export type DashboardSummary = {

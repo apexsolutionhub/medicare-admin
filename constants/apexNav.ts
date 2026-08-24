@@ -10,6 +10,7 @@ import {
   Tags,
   UserPlus,
   Users,
+  Handshake,
 } from "lucide-react";
 
 export type ApexNavBadgeKey =
@@ -57,6 +58,12 @@ export const APEX_MAIN_NAV: ApexNavItem[] = [
 
 export const APEX_MONITORING_NAV: ApexNavItem[] = [
   { id: "pricing", href: "/pricing", label: "Pricing catalog", icon: Tags },
+  {
+    id: "sales-agents",
+    href: "/sales-agents",
+    label: "Sales Agents",
+    icon: Handshake,
+  },
   {
     id: "audit",
     href: "/audit",
