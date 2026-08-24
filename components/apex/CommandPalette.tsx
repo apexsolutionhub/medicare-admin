@@ -3,16 +3,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  BarChart3,
   Building2,
   ClipboardList,
   CreditCard,
   FileText,
+  Handshake,
   LayoutDashboard,
   MessageCircle,
   Tags,
   UserPlus,
   Users,
-  Handshake,
 } from "lucide-react";
 import {
   CommandDialog,
